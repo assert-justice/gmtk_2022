@@ -9,17 +9,18 @@ class Dice is Sprite {
         _random = random
         _randTime = 0.2
         _randClock = 0
-        // _rolling = true
+        _rolling = false
         _nextValue = 0
         transform.origin.x = 7.5
         transform.origin.y = 7.5
         transform.angle = 0.5
-        roll()
+        // roll()
     }
     value{_value}
     value=(val){
         _value = val
         offset.x = 16 * (val-1)
+        transform.angle = 0
     }
     nextValue=(val){_nextValue = val}
     update(deltaTime){
@@ -43,4 +44,5 @@ class Dice is Sprite {
         _rolling = true
         _angleSpeed = _random.float()  + 3
     }
+    rolling{_rolling}
 }

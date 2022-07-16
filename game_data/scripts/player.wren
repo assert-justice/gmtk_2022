@@ -7,7 +7,7 @@ import "pool" for Pool
 import "bullet" for Bullet
 
 class Player is Node {
-    construct new(parent, tileMap){
+    construct new(parent, tileMap, dice){
         super(parent)
         _sprite = Sprite.new(this, 0, 0, 24, 24)
         _sprite.transform = transform
@@ -19,6 +19,9 @@ class Player is Node {
         _audioHandle = AudioSystem.addAudioSource()
         AudioSystem.loadAudioSource(_audioHandle, "game_data/sfx/Climb_Rope_Loop_00.wav", false)
         _pool = Pool.new(0){Bullet.new(null, Vector2.new(7*18,72+18*3), Vector2.new(18,18), Vector3.new(0,0,0))}
+        _dice = dice
+        _statUpdatePending = false
+        statUpdate()
     }
 
     update(deltaTime){
@@ -30,11 +33,18 @@ class Player is Node {
             _vel.y = -_jumpSpeed * deltaTime
         }
         if(Input.getButtonPressed("fire", 0)) {
-            AudioSystem.playAudioSource(_audioHandle)
+            for (die in _dice) {
+                die.roll()
+            }
+            _statUpdatePending = true
+            // AudioSystem.playAudioSource(_audioHandle)
             // var bullet = _pool.get(this)
             // bullet.transform.position.x = transform.position.x
             // bullet.transform.position.y = transform.position.y
             // bullet.velocity.x = 400
+        }
+        if (_statUpdatePending){
+            statUpdate()
         }
         if (_vel.x > 0){_sprite.hflip = true}
         if (_vel.x < 0){_sprite.hflip = false}
@@ -42,5 +52,23 @@ class Player is Node {
         if (newPos.y == transform.position.y) _vel.y = 0
         transform.position = newPos
         super.update(deltaTime)
+    }
+    statUpdate(){
+        var ready = true
+        for(die in _dice){
+            if (die.rolling) ready = false
+        }
+        if (ready){
+            _speed = 50 * _dice[1].value
+            _jumpSpeed = 200 * _dice[2].value
+            _statUpdatePending = false
+        }
+    }
+    hit(){
+        if (_dice[0].value == 1){
+            // die
+        } else{
+            _dice[0].value = _dice[0].value - 1
+        }
     }
 }

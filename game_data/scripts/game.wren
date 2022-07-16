@@ -54,25 +54,33 @@ class Game is Node {
         for(x in 8...16) {
             _tileMap.setTile(0, x, 13)
         }
-        _player = Player.new(this, _tileMap)
-        _player.transform.position.x = 100
-        _player.transform.position.y = 100
         _goomba = Goomba.new(this, _tileMap)
         _goomba.transform.position.x = 200
         _goomba.transform.position.y = 200
         _random = Random.new()
-        var statNames = ["speed", "health","jump power","air jumps"]
+        var statNames = [
+            ["health", 3],
+            ["speed", 4],
+            ["jump power", 2],
+            ["air jumps", 1],
+        ]
+        _dice = []
         for (i in 0...statNames.count) {
-            var name = statNames[i]
-            _dice = Dice.new(this, _random)
-            _dice.transform.position.x = 20
-            _dice.transform.position.y = 20 + i * 30
-            _dice.value = 5
+            var name = statNames[i][0]
+            var val = statNames[i][1]
+            var die = Dice.new(this, _random)
+            die.transform.position.x = 25
+            die.transform.position.y = 25 + i * 30
+            die.value = val
 
             _textBox = TextBox.new(this, Vector2.new(0, 88 + 36 + i * 30), name)
-            _textBox.transform.position.x = 40
-            _textBox.transform.position.y = _dice.transform.position.y - 5
+            _textBox.transform.position.x = 35
+            _textBox.transform.position.y = die.transform.position.y - 5
+            _dice.add(die)
         }
+        _player = Player.new(this, _tileMap, _dice)
+        _player.transform.position.x = 100
+        _player.transform.position.y = 100
         // _atlas = Sprite.new(this, 0,0,1024, 1024)
         // _player.setVisible(true)
         // _pool = Pool.new(0) {Bullet.new(null, Vector2.new(4 * 24, 24), Vector2.new(24, 24), Vector2.new(0, 3) )}
