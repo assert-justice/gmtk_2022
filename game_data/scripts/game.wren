@@ -66,9 +66,11 @@ class Game is Node {
         _dice.transform.position.y = 100
         _dice.value = 5
 
-        _textBox = TextBox.new(this, Vector2.new(0, 88 + 36), "a")
 
-        _atlas = Sprite.new(this, 0,0,1024, 1024)
+        // _atlas = Sprite.new(this, 0,0,1024, 1024)
+        _textBox = TextBox.new(this, Vector2.new(0, 88 + 36), "hello\nworld!?")
+        _textBox.transform.position.x = 200
+        _textBox.transform.position.y = 50
         // _player.setVisible(true)
         // _pool = Pool.new(0) {Bullet.new(null, Vector2.new(4 * 24, 24), Vector2.new(24, 24), Vector2.new(0, 3) )}
         // _markPool = Pool.new(0) {Bullet.new(null, Vector2.new(3 * 24, 2 * 24), Vector2.new(24, 24), Vector2.new(0, 3) )}
