@@ -61,16 +61,19 @@ class Game is Node {
         _goomba.transform.position.x = 200
         _goomba.transform.position.y = 200
         _random = Random.new()
-        _dice = Dice.new(this, _random)
-        _dice.transform.position.x = 100
-        _dice.transform.position.y = 100
-        _dice.value = 5
+        var statNames = ["speed", "health","jump power","air jumps"]
+        for (i in 0...statNames.count) {
+            var name = statNames[i]
+            _dice = Dice.new(this, _random)
+            _dice.transform.position.x = 20
+            _dice.transform.position.y = 20 + i * 30
+            _dice.value = 5
 
-
+            _textBox = TextBox.new(this, Vector2.new(0, 88 + 36 + i * 30), name)
+            _textBox.transform.position.x = 40
+            _textBox.transform.position.y = _dice.transform.position.y - 5
+        }
         // _atlas = Sprite.new(this, 0,0,1024, 1024)
-        _textBox = TextBox.new(this, Vector2.new(0, 88 + 36), "hello\nworld!?")
-        _textBox.transform.position.x = 200
-        _textBox.transform.position.y = 50
         // _player.setVisible(true)
         // _pool = Pool.new(0) {Bullet.new(null, Vector2.new(4 * 24, 24), Vector2.new(24, 24), Vector2.new(0, 3) )}
         // _markPool = Pool.new(0) {Bullet.new(null, Vector2.new(3 * 24, 2 * 24), Vector2.new(24, 24), Vector2.new(0, 3) )}

@@ -9,11 +9,12 @@ class Dice is Sprite {
         _random = random
         _randTime = 0.2
         _randClock = 0
-        _rolling = true
+        // _rolling = true
         _nextValue = 0
         transform.origin.x = 7.5
         transform.origin.y = 7.5
         transform.angle = 0.5
+        roll()
     }
     value{_value}
     value=(val){
@@ -40,5 +41,6 @@ class Dice is Sprite {
     }
     roll(){
         _rolling = true
+        _angleSpeed = _random.float()  + 3
     }
 }

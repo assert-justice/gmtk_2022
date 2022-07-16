@@ -19,12 +19,12 @@ class TextBox is Sprite {
             if(idx == -1){
                 if (c == "\n"){
                     // newline
-                    if (cursorX + width > maxWidth) maxWidth = cursorX + width
                     maxHeight = maxHeight + height
                     cursorX = 0
                     cursorY = cursorY + height
                 }
             } else{
+                if (cursorX + width > maxWidth) maxWidth = cursorX + width
                 var brushPosition = textOffset.copy()
                 brushPosition.x = brushPosition.x + cursorX
                 brushPosition.y = brushPosition.y + cursorY
@@ -40,7 +40,7 @@ class TextBox is Sprite {
             }
             if(c != "\n") cursorX = cursorX + width
         }
-                Renderer.blitSpriteToAtlas(_brushSprite)
+        Renderer.setSpriteTransform(_brushSprite, -100, 0, 0, width, height, 0)
         super(parent, textOffset.x, textOffset.y, maxWidth + width, maxHeight)
     }
 }
