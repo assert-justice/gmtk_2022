@@ -5,9 +5,11 @@ import "input" for Input
 import "audio_system" for AudioSystem
 import "pool" for Pool
 import "bullet" for Bullet
+import "dice" for Dice
+import "text_box" for TextBox
 
 class Player is Node {
-    construct new(parent, tileMap, dice){
+    construct new(parent, tileMap, random){
         super(parent)
         _sprite = Sprite.new(this, 0, 0, 24, 24)
         _sprite.transform = transform
@@ -21,11 +23,33 @@ class Player is Node {
         _audioHandle = AudioSystem.addAudioSource()
         AudioSystem.loadAudioSource(_audioHandle, "game_data/sfx/Climb_Rope_Loop_00.wav", false)
         _pool = Pool.new(0){Bullet.new(null, Vector2.new(7*18,72+18*3), Vector2.new(18,18), Vector3.new(0,0,0))}
-        _dice = dice
+        _random = random
         _statUpdatePending = false
-        statUpdate()
         _onGround = false
+        var statNames = [
+            ["health", 3],
+            ["speed", 4],
+            ["jump power", 2],
+            ["air jumps", 1],
+        ]
+        _dice = []
+        for (i in 0...statNames.count) {
+            var name = statNames[i][0]
+            var val = statNames[i][1]
+            var die = Dice.new(this, _random)
+            die.transform.position.x = 25
+            die.transform.position.y = 25 + i * 30
+            die.value = val
+
+            _textBox = TextBox.new(this, Vector2.new(0, 88 + 36 + i * 30), name)
+            _textBox.transform.position.x = 35
+            _textBox.transform.position.y = die.transform.position.y - 5
+            _dice.add(die)
+        }
+        statUpdate()
     }
+
+    tileMap=(val){_tileMap = val}
 
     update(deltaTime){
         var move = Input.getAxis2("move", 0)
@@ -43,12 +67,12 @@ class Player is Node {
             if (jumping) _vel.y = -_jumpSpeed * deltaTime
         }
         if(Input.getButtonPressed("fire", 0)) {
-            _dice[2].value = _dice[2].value + 1
-            statUpdate()
-            // for (die in _dice) {
-            //     die.roll()
-            // }
-            // _statUpdatePending = true
+            // _dice[2].value = _dice[2].value + 1
+            // statUpdate()
+            for (die in _dice) {
+                die.roll()
+            }
+            _statUpdatePending = true
             // AudioSystem.playAudioSource(_audioHandle)
             // var bullet = _pool.get(this)
             // bullet.transform.position.x = transform.position.x

@@ -16,6 +16,7 @@ import "player" for Player
 import "goomba" for Goomba
 import "dice" for Dice
 import "text_box" for TextBox
+import "map_manager" for MapManager
 
 class Game is Node {
     construct new(){
@@ -42,45 +43,52 @@ class Game is Node {
         Renderer.blitFileToAtlas("game_data/sprites/tiles_packed.png", 234, 0)
         Renderer.blitFileToAtlas("game_data/sprites/dice.png", 0, 72)
         Renderer.blitFileToAtlas("game_data/sprites/kenny_mini_square_mono_12x9.png", 0, 88)
-        _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
-        _tileMap.addTemplate(234, 0, true)
-        for (x in 0..._tileMap.width) {
-            for(y in 0..._tileMap.height){
-                if (x == 0 || x == _tileMap.width-1 || y == 0 || y == _tileMap.height-1){
-                    _tileMap.setTile(0, x, y)
-                }
-            }
-        }
-        for(x in 8...16) {
-            _tileMap.setTile(0, x, 13)
-        }
-        _goomba = Goomba.new(this, _tileMap)
-        _goomba.transform.position.x = 200
-        _goomba.transform.position.y = 200
         _random = Random.new()
-        var statNames = [
-            ["health", 3],
-            ["speed", 4],
-            ["jump power", 2],
-            ["air jumps", 1],
-        ]
-        _dice = []
-        for (i in 0...statNames.count) {
-            var name = statNames[i][0]
-            var val = statNames[i][1]
-            var die = Dice.new(this, _random)
-            die.transform.position.x = 25
-            die.transform.position.y = 25 + i * 30
-            die.value = val
-
-            _textBox = TextBox.new(this, Vector2.new(0, 88 + 36 + i * 30), name)
-            _textBox.transform.position.x = 35
-            _textBox.transform.position.y = die.transform.position.y - 5
-            _dice.add(die)
-        }
-        _player = Player.new(this, _tileMap, _dice)
+        _player = Player.new(null, _tileMap, _random)
         _player.transform.position.x = 100
         _player.transform.position.y = 100
+
+        _mapManager = MapManager.new(this, _player, null, null)
+        _mapManager.addRoom([
+            [0,0,0,27,15],
+            [-1,1,1,25,13],
+            [0,8,13,8,1],
+        ],null,null,null)
+        _mapManager.addRoom([
+            [0,0,0,27,15],
+            [-1,1,1,25,13],
+        ],null,null,null)
+        _mapManager.setRoom(0)
+
+        // _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
+        // _tileMap.addTemplate(234, 0, true)
+        // _tileMap.setArea(0, 0, 0, _tileMap.width, _tileMap.height)
+        // _tileMap.setArea(-1, 1, 1, _tileMap.width-2, _tileMap.height-2)
+        // _tileMap.setArea(0, 8, 13, 8, 1)
+        // _tileMap.redraw()
+        // _goomba = Goomba.new(this, _tileMap)
+        // _goomba.transform.position.x = 200
+        // _goomba.transform.position.y = 200
+        // var statNames = [
+        //     ["health", 3],
+        //     ["speed", 4],
+        //     ["jump power", 2],
+        //     ["air jumps", 1],
+        // ]
+        // _dice = []
+        // for (i in 0...statNames.count) {
+        //     var name = statNames[i][0]
+        //     var val = statNames[i][1]
+        //     var die = Dice.new(this, _random)
+        //     die.transform.position.x = 25
+        //     die.transform.position.y = 25 + i * 30
+        //     die.value = val
+
+        //     _textBox = TextBox.new(this, Vector2.new(0, 88 + 36 + i * 30), name)
+        //     _textBox.transform.position.x = 35
+        //     _textBox.transform.position.y = die.transform.position.y - 5
+        //     _dice.add(die)
+        // }
         // _atlas = Sprite.new(this, 0,0,1024, 1024)
         // _player.setVisible(true)
         // _pool = Pool.new(0) {Bullet.new(null, Vector2.new(4 * 24, 24), Vector2.new(24, 24), Vector2.new(0, 3) )}
@@ -142,13 +150,14 @@ class Game is Node {
         //     bullet.transform.origin.x = bullet.dimensions.x / 2
         //     bullet.transform.origin.y = bullet.dimensions.y / 2
         // }
-        // if(Input.getButtonPressed("fire", 0)){
-        //     // AudioSystem.playAudioSource(0)
-        //     _source.play()
-        //     var i = _colors.indexOf(_anim) + 1
-        //     if (i == _colors.count) i = 0
-        //     _anim = _colors[i]
-        // }
+        if(Input.getButtonPressed("fire", 0)){
+            _mapManager.setRoom(1)
+            // AudioSystem.playAudioSource(0)
+            // _source.play()
+            // var i = _colors.indexOf(_anim) + 1
+            // if (i == _colors.count) i = 0
+            // _anim = _colors[i]
+        }
         // var move = Input.getAxis2("move", 0)
         // move.mulScalar(_speed * deltaTime)
         // _vel.x = move.x

@@ -31,13 +31,84 @@ class TileMap is Sprite{
         Renderer.setSpriteDimensions(_brushSprite, 0, 0, cellWidth, cellHeight)
         Renderer.setSpriteTransform(_brushSprite, 0, 0, 0, cellWidth, cellHeight, 0)
     }
+    clear(){
+        for (y in 0...height) {
+            for (x in 0...width) {
+                // System.print("%(x) %(y)")
+                _tiles[y][x] = null
+            }
+        }
+    }
+    redraw(){
+        // clear brush
+        for(y in 0...height){
+            for(x in 0...width){
+                if(!_tiles[y][x]){
+                    setTile(-1, x, y)
+                } else{
+                    setTile(_tiles[y][x][0], x, y)
+                }
+            }
+        }
+    }
     width{_width}
     height{_height}
     addTemplate(xOffset, yOffset, solid){
         _tileTemplates.add([xOffset, yOffset, solid])
         return _tileTemplates.count - 1
     }
+    drawTile(x, y){
+        // clear brush
+        // Renderer.setSpriteDimensions(_brushSprite, 1024-_cellWidth, 1024-_cellHeight, _cellWidth, _cellHeight)
+        Renderer.setSpriteTransform(_brushSprite, x * _cellWidth + _spriteX, y * _cellHeight + _spriteY, 0, _cellWidth, _cellHeight, 0)
+        Renderer.blitSpriteToAtlas(_brushSprite)
+    }
+    setArea(idx, startX, startY, width, height){
+        for(y in startY...(startY + height)){
+            for(x in startX...(startX + width)){
+                setCellData(idx, x, y)
+            }
+        }
+    }
     setTile(idx, x, y){
+        setCellData(idx, x, y)
+        var tile = _tileTemplates[idx]
+        var xOffset = tile[0]
+        var yOffset = tile[1]
+        if(idx == -1){
+            Renderer.setSpriteDimensions(_brushSprite, 1024-_cellWidth, 1024-_cellHeight, _cellWidth, _cellHeight)
+        } else {
+            Renderer.setSpriteDimensions(_brushSprite, xOffset, yOffset, _cellWidth, _cellHeight)
+        }
+        drawTile(x,y)
+        // if(idx == -1){
+        //     Renderer.setSpriteDimensions(_brushSprite, 1024-_cellWidth, 1024-_cellHeight, _cellWidth, _cellHeight)
+        //     drawTile(x, y)
+        //     _tiles[y][x] = null
+        //     return
+        // }
+        // if (idx < 0 || idx >= _tileTemplates.count){
+        //     Fiber.abort("%(idx) is not a valid tile index.")
+        // }
+        // // draw tile
+        // var tile = _tileTemplates[idx]
+        // var xOffset = tile[0]
+        // var yOffset = tile[1]
+        // var solid = tile[2]
+        // Renderer.setSpriteDimensions(_brushSprite, xOffset, yOffset, _cellWidth, _cellHeight)
+        // drawTile(x,y)
+        // // Renderer.setSpriteTransform(_brushSprite, x * _cellWidth + _spriteX, y * _cellHeight + _spriteY, 0, _cellWidth, _cellHeight, 0)
+        // // Renderer.blitSpriteToAtlas(_brushSprite)
+        // // add tile to tiles
+        // _tiles[y][x] = [idx, solid]
+    }
+    setCellData(idx, x, y){
+                if(idx == -1){
+            // Renderer.setSpriteDimensions(_brushSprite, 1024-_cellWidth, 1024-_cellHeight, _cellWidth, _cellHeight)
+            // drawTile(x, y)
+            _tiles[y][x] = null
+            return
+        }
         if (idx < 0 || idx >= _tileTemplates.count){
             Fiber.abort("%(idx) is not a valid tile index.")
         }
@@ -46,24 +117,29 @@ class TileMap is Sprite{
         var xOffset = tile[0]
         var yOffset = tile[1]
         var solid = tile[2]
-        Renderer.setSpriteDimensions(_brushSprite, xOffset, yOffset, _cellWidth, _cellHeight)
-        Renderer.setSpriteTransform(_brushSprite, x * _cellWidth + _spriteX, y * _cellHeight + _spriteY, 0, _cellWidth, _cellHeight, 0)
-        Renderer.blitSpriteToAtlas(_brushSprite)
+        // Renderer.setSpriteDimensions(_brushSprite, xOffset, yOffset, _cellWidth, _cellHeight)
+        // drawTile(x,y)
+        // Renderer.setSpriteTransform(_brushSprite, x * _cellWidth + _spriteX, y * _cellHeight + _spriteY, 0, _cellWidth, _cellHeight, 0)
+        // Renderer.blitSpriteToAtlas(_brushSprite)
         // add tile to tiles
         _tiles[y][x] = [idx, solid]
+
     }
+    getCellData(x,y){_tiles[y][x]}
     solid(x, y){
+        if(!onGrid(x,y)) return false
         var val = _tiles[y][x]
         if(val && val[1]) return true
         return false
     }
     onGrid(x, y){
-        return x >= 0 && x < _width && y >= 0 && y < _height
+        return x >= 0 && x < width && y >= 0 && y < height
     }
     getCellAtPosition(position){
         var cell = position.copy().subVector(transform.position).addVector(transform.origin)
         cell.x = (cell.x / _cellWidth).floor
         cell.y = (cell.y / _cellHeight).floor
+        if(!onGrid(cell.x, cell.y)) return [-1,-1,null,null]
         var tile = _tiles[cell.y][cell.x]
         return [cell.x, cell.y, tile ? tile[0] : null, tile ? tile[1] : null]
     }
