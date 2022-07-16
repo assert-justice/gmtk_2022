@@ -13,14 +13,14 @@ class Dice is Sprite {
         _nextValue = 0
         transform.origin.x = 7.5
         transform.origin.y = 7.5
-        transform.angle = 0.5
+        // transform.angle = 0.5
         // roll()
     }
     value{_value}
     value=(val){
         _value = val
         offset.x = 16 * (val-1)
-        transform.angle = 0
+        // transform.angle = 0
     }
     nextValue=(val){_nextValue = val}
     update(deltaTime){
