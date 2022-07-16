@@ -16,7 +16,7 @@ class MapManager is Node {
         _nextRoomIdx = 0
         _currentRoom = null
         _state = 0 // 0: idle, 1: clearing, 2: building
-        _animTime = 0.01
+        _animTime = 0.001
         _animClock = 0
         _animX = 0
         _animY = 0
