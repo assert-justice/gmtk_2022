@@ -52,8 +52,11 @@ class Game is Node {
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],
+            [-1,25,11,2,2],
             [0,8,13,8,1],
-        ],null,null,null)
+        ],[
+            [1, 50, 50], null, null, null
+        ],null,null)
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],

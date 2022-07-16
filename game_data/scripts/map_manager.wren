@@ -1,12 +1,13 @@
 import "tilemap" for TileMap
 import "node" for Node
+import "vmath" for Vector3
 
 class MapManager is Node {
     //
     construct new(parent, player, enemyPool, checkpointPool){
         // 
         super(parent)
-        _tileMap = TileMap.new(this, 27, 15, 18, 18, 400, 234)
+        _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
         _tileMap.addTemplate(234, 0, true)
         _player = player
         // _player.setParent(this)
@@ -47,7 +48,31 @@ class MapManager is Node {
         _animY = 0
         // place enemies and checkpoints
     }
+    lerp(a,b,t){
+        return (b-a) * t + a
+    }
     update(deltaTime){
+        var door = [0,200,200]
+        var maxX = _tileMap.width * 18
+        var minX = 0
+        var maxY = _tileMap.height * 18
+        var minY = 0
+        if(_player.transform.position.x > maxX){
+            door = _currentRoom["doors"] ? _currentRoom["doors"][0] : door
+        } else if(_player.transform.position.y < minY){
+            door = _currentRoom["doors"] ? _currentRoom["doors"][1] : door
+        } else if(_player.transform.position.x < minX){
+            door = _currentRoom["doors"] ? _currentRoom["doors"][2] : door
+        } else if(_player.transform.position.y > maxY){
+            door = _currentRoom["doors"] ? _currentRoom["doors"][3] : door
+        } else{
+            door = null
+        }
+        if(door){
+            setRoom(door[0])
+            _player.transform.position.x = door[1]
+            _player.transform.position.y = door[2]
+        }
         if(_state == 2){
             _animClock = _animClock - deltaTime
             if(_animClock < 0){
@@ -55,21 +80,25 @@ class MapManager is Node {
                 _animClock = _animTime
                 var placed = false
                 var hack = false
-                while(!placed){
-                    var data = _tileMap.getCellData(_animX,_animY)
-                    if(data){
-                        placed = true
-                        _tileMap.setTile(data[0],_animX,_animY)
-                    }
-                    _animX = _animX + 1
-                    if(!_tileMap.onGrid(_animX, _animY)){
-                        _animX = 0
-                        _animY = _animY + 1
-                        if(!_tileMap.onGrid(_animX, _animY)) {
+                var time = deltaTime
+                while(time > 0){
+                    while(!placed){
+                        var data = _tileMap.getCellData(_animX,_animY)
+                        if(data){
                             placed = true
-                            hack = true
+                            _tileMap.setTile(data[0],_animX,_animY)
+                        }
+                        _animX = _animX + 1
+                        if(!_tileMap.onGrid(_animX, _animY)){
+                            _animX = 0
+                            _animY = _animY + 1
+                            if(!_tileMap.onGrid(_animX, _animY)) {
+                                placed = true
+                                hack = true
+                            }
                         }
                     }
+                    time = time - _animTime
                 }
                 if(hack){
                     // if we are done drawing the map

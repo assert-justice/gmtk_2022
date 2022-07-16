@@ -62,6 +62,7 @@ class TileMap is Sprite{
         // Renderer.setSpriteDimensions(_brushSprite, 1024-_cellWidth, 1024-_cellHeight, _cellWidth, _cellHeight)
         Renderer.setSpriteTransform(_brushSprite, x * _cellWidth + _spriteX, y * _cellHeight + _spriteY, 0, _cellWidth, _cellHeight, 0)
         Renderer.blitSpriteToAtlas(_brushSprite)
+        Renderer.setSpriteTransform(_brushSprite, -100, 0, 0, _cellWidth, _cellHeight, 0)
     }
     setArea(idx, startX, startY, width, height){
         for(y in startY...(startY + height)){
