@@ -15,6 +15,7 @@ import "random" for Random
 import "player" for Player
 import "goomba" for Goomba
 import "dice" for Dice
+import "text_box" for TextBox
 
 class Game is Node {
     construct new(){
@@ -26,14 +27,23 @@ class Game is Node {
             // "game_data/sprites/dice.png",
             "game_data/sprites/kenny_mini_square_mono_12x9.png",
         ]
-        for (fname in fnames) {
-            var stats = Renderer.blitFileToAtlas(fname, 0, tracker)
-            tracker = tracker + stats["height"]
-            // System.print(stats["width"])
-        }
-        Renderer.blitFileToAtlas("game_data/sprites/dice.png", 216, 0)
-        _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, tracker)
-        _tileMap.addTemplate(0, 72, true)
+        // for (fname in fnames) {
+        //     var stats = Renderer.blitFileToAtlas(fname, 0, tracker)
+        //     var height = stats["height"]
+        //     // if (height == 3 * 24){
+        //     //     tracker = tracker + 24
+        //     // } else{
+        //     //     tracker = tracker + height
+        //     // }
+        //     tracker = tracker + height
+        //     // System.print(stats["width"])
+        // }
+        Renderer.blitFileToAtlas("game_data/sprites/characters_packed.png", 0, 0)
+        Renderer.blitFileToAtlas("game_data/sprites/tiles_packed.png", 234, 0)
+        Renderer.blitFileToAtlas("game_data/sprites/dice.png", 0, 72)
+        Renderer.blitFileToAtlas("game_data/sprites/kenny_mini_square_mono_12x9.png", 0, 88)
+        _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
+        _tileMap.addTemplate(234, 0, true)
         for (x in 0..._tileMap.width) {
             for(y in 0..._tileMap.height){
                 if (x == 0 || x == _tileMap.width-1 || y == 0 || y == _tileMap.height-1){
@@ -56,6 +66,9 @@ class Game is Node {
         _dice.transform.position.y = 100
         _dice.value = 5
 
+        _textBox = TextBox.new(this, Vector2.new(0, 88 + 36), "a")
+
+        _atlas = Sprite.new(this, 0,0,1024, 1024)
         // _player.setVisible(true)
         // _pool = Pool.new(0) {Bullet.new(null, Vector2.new(4 * 24, 24), Vector2.new(24, 24), Vector2.new(0, 3) )}
         // _markPool = Pool.new(0) {Bullet.new(null, Vector2.new(3 * 24, 2 * 24), Vector2.new(24, 24), Vector2.new(0, 3) )}
@@ -92,7 +105,6 @@ class Game is Node {
         // _atlas = Sprite.new(this, 0,0,24, 24)
         // _atlas.transform.position.x = _x
         // _atlas.transform.position.y = _y
-        // _atlas = Sprite.new(this, 0,0,1024, 1024)
         // _atlas.transform.position.x = _x
         // _atlas.transform.position.y = _y
         // _vel = Vector3.new(0,0,0)
