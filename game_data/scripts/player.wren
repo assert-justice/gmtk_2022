@@ -27,7 +27,7 @@ class Player is Node {
         _statUpdatePending = false
         _onGround = false
         var statNames = [
-            ["health", 3],
+            // ["health", 3],
             ["speed", 4],
             ["jump power", 2],
             ["air jumps", 1],
@@ -104,10 +104,10 @@ class Player is Node {
             if (die.rolling) ready = false
         }
         if (ready){
-            _speed = 50 * _dice[1].value
+            _speed = 50 * _dice[0].value
             var options = [0,200,250,300,325,340,375,]
-            _jumpSpeed = options[_dice[2].value]
-            _maxJumps = _dice[3].value
+            _jumpSpeed = options[_dice[1].value]
+            _maxJumps = _dice[2].value
             _statUpdatePending = false
         }
     }

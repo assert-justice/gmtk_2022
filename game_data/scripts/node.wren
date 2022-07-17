@@ -54,6 +54,7 @@ class Node {
         // ensure the node is actually a child
         var idx = _children.indexOf(child)
         if(idx == -1) Fiber.abort("Tried to remove child '%(child)' from a node that is not its parent.")
+        //if(idx !=-1)
         _children.removeAt(idx)
     }
     privateSetParent(parent){

@@ -1,11 +1,11 @@
 import "audio_system" for AudioSystem
 import "node" for Node
 class AudioSource is Node{
-    construct new(parent, fname){
+    construct new(parent, fname, shouldStream){
         super(parent)
         _handle = AudioSystem.addAudioSource()
         if(_handle == -1) Fiber.abort("Audio source limit exceeded")
-        if(!AudioSystem.loadAudioSource(_handle, fname)) Fiber.abort("Cannot load audio file %(fname)")
+        if(!AudioSystem.loadAudioSource(_handle, fname, shouldStream)) Fiber.abort("Cannot load audio file %(fname)")
     }
     play(){
         AudioSystem.playAudioSource(_handle)

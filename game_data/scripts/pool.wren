@@ -9,8 +9,6 @@ class Pool {
     alloc(){
         var node = _fn.call()
         node.pool = this
-
-        _avail.add(node)
         return node
     }
     get(parent){

@@ -48,20 +48,26 @@ class Game is Node {
         _player.transform.position.x = 100
         _player.transform.position.y = 100
 
-        _mapManager = MapManager.new(this, _player, null, null)
+        _mapManager = MapManager.new(this, _player)
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],
             [-1,25,11,2,2],
             [0,8,13,8,1],
         ],[
-            [1, 50, 50], null, null, null
-        ],null,null)
+            [1, 20, 11*18], null, null, null
+        ],[Vector2.new(100,200),Vector2.new(200,200)],null,null)
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],
-        ],null,null,null)
+            [-1,0,11,2,2],
+        ],[
+            null,null,[0,26*18-20,11*18],null
+        ],null,null,true)
         _mapManager.setRoom(0)
+        _music = AudioSource.new(this,"game_data/music/cute_track.mp3",true)
+        _music.looping = true
+        _music.play()
 
         // _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
         // _tileMap.addTemplate(234, 0, true)
@@ -69,6 +75,7 @@ class Game is Node {
         // _tileMap.setArea(-1, 1, 1, _tileMap.width-2, _tileMap.height-2)
         // _tileMap.setArea(0, 8, 13, 8, 1)
         // _tileMap.redraw()
+        // _goombaPool = Pool.new(0){Goomba.new(this, )}
         // _goomba = Goomba.new(this, _tileMap)
         // _goomba.transform.position.x = 200
         // _goomba.transform.position.y = 200
@@ -154,7 +161,7 @@ class Game is Node {
         //     bullet.transform.origin.y = bullet.dimensions.y / 2
         // }
         if(Input.getButtonPressed("fire", 0)){
-            _mapManager.setRoom(1)
+            // _mapManager.setRoom(1)
             // AudioSystem.playAudioSource(0)
             // _source.play()
             // var i = _colors.indexOf(_anim) + 1

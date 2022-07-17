@@ -1,10 +1,12 @@
 import "tilemap" for TileMap
 import "node" for Node
 import "vmath" for Vector3
+import "pool" for Pool
+import "goomba" for Goomba
 
 class MapManager is Node {
     //
-    construct new(parent, player, enemyPool, checkpointPool){
+    construct new(parent, player){
         // 
         super(parent)
         _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
@@ -21,20 +23,29 @@ class MapManager is Node {
         _animClock = 0
         _animX = 0
         _animY = 0
+        _enemyPool = Pool.new(0){Goomba.new(this, _tileMap)}
+        _activeEnemies = []
         // System.print(_tileMap.onGrid(0, 15))
     }
 
-    addRoom(steps, doors, enemies, checkpoints){
+    addRoom(steps, doors, enemies, checkpoints, boss){
         var room = {
             "steps":steps,
             "doors":doors,
             "enemies":enemies,
-            "checkpoints":checkpoints
+            "checkpoints":checkpoints,
+            "boss":boss,
         }
         _rooms.add(room)
         return _rooms.count - 1
     }
     setRoom(idx){
+        for (enemy in _activeEnemies) {
+            enemy.transform.position.x = -100
+            enemy.update(0)
+            enemy.sleep()
+        }
+        _activeEnemies.clear()
         _currentRoomIdx = idx
         _currentRoom = _rooms[_currentRoomIdx]
         _tileMap.clear()
@@ -46,7 +57,17 @@ class MapManager is Node {
         _player.setParent(null)
         _animX = 0
         _animY = 0
-        // place enemies and checkpoints
+        // place enemies
+        if (_currentRoom["enemies"]){
+            for(position in _currentRoom["enemies"]){
+                System.print("%(position.x) %(position.y)")
+                var enemy = _enemyPool.get(this)
+                _activeEnemies.add(enemy)
+                enemy.transform.position.x = position.x
+                enemy.transform.position.y = position.y
+                enemy.update(0)
+            }
+        }
     }
     lerp(a,b,t){
         return (b-a) * t + a
@@ -72,6 +93,7 @@ class MapManager is Node {
             setRoom(door[0])
             _player.transform.position.x = door[1]
             _player.transform.position.y = door[2]
+            _player.update(0)
         }
         if(_state == 2){
             _animClock = _animClock - deltaTime
@@ -104,6 +126,9 @@ class MapManager is Node {
                     // if we are done drawing the map
                     _state = 0
                     _player.setParent(this)
+                    for(enemy in _activeEnemies){
+                        enemy.setParent(this)
+                    }
                 }
             }
         }
