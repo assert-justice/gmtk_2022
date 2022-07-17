@@ -101,8 +101,11 @@ class MapManager is Node {
         if(door){
             setRoom(door[0])
             _player.transform.position.x = door[1]
-            _player.transform.position.y = door[2]
+            // _player.transform.position.y = door[2]
             _player.update(0)
+            _checkpointRoom = door[0]
+            _checkpointX = door[1]
+            _checkpointY = door[2]
         }
         if(_state == 2){
             _animClock = _animClock - deltaTime

@@ -56,14 +56,17 @@ class Game is Node {
             [0,8,13,8,1],
         ],[
             [1, 20, 11*18], null, null, null
-        ],[Vector2.new(200,200)],null,null)
+        ],[Vector2.new(200,50)],null,null)
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],
             [-1,0,11,2,2],
+            [0,19,6,4,2],
+            [-1,25,4,2,2],
+            [0,6,8,8,2],
         ],[
-            null,null,[0,26*18-20,11*18],null
-        ],null,null,true)
+            [2, 20, 11*18],null,[0,26*18-20,11*18],null
+        ],[Vector2.new(100,50)],null,true)
         _mapManager.setRoom(0)
         _music = AudioSource.new(this,"game_data/music/cute_track.mp3",true)
         _music.looping = true
