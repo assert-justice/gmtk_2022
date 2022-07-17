@@ -7,6 +7,7 @@ import "pool" for Pool
 import "bullet" for Bullet
 import "dice" for Dice
 import "text_box" for TextBox
+import "audio_source" for AudioSource
 
 class Player is Node {
     construct new(parent, tileMap, random){
@@ -20,12 +21,14 @@ class Player is Node {
         _jumpSpeed = 400
         _jumps = 0
         _maxJumps = 1
-        _audioHandle = AudioSystem.addAudioSource()
-        AudioSystem.loadAudioSource(_audioHandle, "game_data/sfx/Climb_Rope_Loop_00.wav", false)
+        // _audioHandle = AudioSystem.addAudioSource()
+        // AudioSystem.loadAudioSource(_audioHandle, "game_data/sfx/Climb_Rope_Loop_00.wav", false)
         _pool = Pool.new(0){Bullet.new(null, Vector2.new(7*18,72+18*3), Vector2.new(18,18), Vector3.new(0,0,0))}
         _random = random
         _statUpdatePending = false
         _onGround = false
+        _jumpSfx = AudioSource.new(this, "game_data/sfx/Jump__009.wav",false)
+        _ouchSfx = AudioSource.new(this, "game_data/sfx/Ouch__003.wav",false)
         var statNames = [
             // ["health", 3],
             ["speed", 4],
@@ -64,7 +67,10 @@ class Player is Node {
                 jumping = true
                 _jumps = _jumps - 1
             }
-            if (jumping) _vel.y = -_jumpSpeed * deltaTime
+            if (jumping) {
+                _vel.y = -_jumpSpeed * deltaTime
+                _jumpSfx.play()
+            }
         }
         if(Input.getButtonPressed("fire", 0)) {
             // _dice[2].value = _dice[2].value + 1
@@ -112,10 +118,12 @@ class Player is Node {
         }
     }
     hit(){
-        if (_dice[0].value == 1){
-            // die
-        } else{
-            _dice[0].value = _dice[0].value - 1
+        _ouchSfx.play()
+        for (die in _dice) {
+            die.roll()
         }
+        _statUpdatePending = true
+        _manager.hit()
     }
+    manager=(val){_manager = val}
 }

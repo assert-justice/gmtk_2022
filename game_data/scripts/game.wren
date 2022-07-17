@@ -56,7 +56,7 @@ class Game is Node {
             [0,8,13,8,1],
         ],[
             [1, 20, 11*18], null, null, null
-        ],[Vector2.new(100,200),Vector2.new(200,200)],null,null)
+        ],[Vector2.new(200,200)],null,null)
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],

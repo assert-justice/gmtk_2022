@@ -12,6 +12,7 @@ class MapManager is Node {
         _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
         _tileMap.addTemplate(234, 0, true)
         _player = player
+        _player.manager = this
         // _player.setParent(this)
         _player.tileMap = _tileMap
         _rooms = []
@@ -23,8 +24,11 @@ class MapManager is Node {
         _animClock = 0
         _animX = 0
         _animY = 0
-        _enemyPool = Pool.new(0){Goomba.new(this, _tileMap)}
+        _enemyPool = Pool.new(0){Goomba.new(this, _tileMap, player)}
         _activeEnemies = []
+        _checkpointRoom = 0
+        _checkpointX = 100
+        _checkpointY = 100
         // System.print(_tileMap.onGrid(0, 15))
     }
 
@@ -38,6 +42,11 @@ class MapManager is Node {
         }
         _rooms.add(room)
         return _rooms.count - 1
+    }
+    hit(){
+        _player.transform.position.x = _checkpointX
+        _player.transform.position.y = _checkpointY
+        setRoom(_checkpointRoom)
     }
     setRoom(idx){
         for (enemy in _activeEnemies) {
@@ -60,7 +69,7 @@ class MapManager is Node {
         // place enemies
         if (_currentRoom["enemies"]){
             for(position in _currentRoom["enemies"]){
-                System.print("%(position.x) %(position.y)")
+                // System.print("%(position.x) %(position.y)")
                 var enemy = _enemyPool.get(this)
                 _activeEnemies.add(enemy)
                 enemy.transform.position.x = position.x

@@ -2,13 +2,15 @@ import "sprite" for Sprite
 import "vmath" for Vector3
 
 class Goomba is Sprite {
-    construct new(parent, tileMap){
+    construct new(parent, tileMap, player){
         super(parent, 3 * 24, 2 * 24, 24, 24)
         _tileMap = tileMap
         _gravity = 10
         _speed = 150
         _dx = -1
         _vel = Vector3.new(0,0,0)
+        _player = player
+        _radius = 10
     }
 
     bounce(){
@@ -27,6 +29,12 @@ class Goomba is Sprite {
         var cell = _tileMap.getCellAtPosition(probe)
         if(!_tileMap.solid(cell[0] + _dx, cell[1] + 2)) bounce()
         transform.position = newPos
+        var dis = _player.transform.position.copy()
+        dis.x = dis.x - transform.position.x
+        dis.y = dis.y - transform.position.y
+        if(dis.length < _radius){
+            _player.hit()
+        }
         super.update(deltaTime)
     }
 }
