@@ -25,20 +25,8 @@ class Game is Node {
         var fnames = [
             "game_data/sprites/characters_packed.png",
             "game_data/sprites/tiles_packed.png",
-            // "game_data/sprites/dice.png",
             "game_data/sprites/kenny_mini_square_mono_12x9.png",
         ]
-        // for (fname in fnames) {
-        //     var stats = Renderer.blitFileToAtlas(fname, 0, tracker)
-        //     var height = stats["height"]
-        //     // if (height == 3 * 24){
-        //     //     tracker = tracker + 24
-        //     // } else{
-        //     //     tracker = tracker + height
-        //     // }
-        //     tracker = tracker + height
-        //     // System.print(stats["width"])
-        // }
         Renderer.blitFileToAtlas("game_data/sprites/characters_packed.png", 0, 0)
         Renderer.blitFileToAtlas("game_data/sprites/tiles_packed.png", 234, 0)
         Renderer.blitFileToAtlas("game_data/sprites/dice.png", 0, 72)
@@ -61,7 +49,7 @@ class Game is Node {
             [0,0,0,27,15],
             [-1,1,1,25,13],
             [-1,0,11,2,2],
-            [0,19,6,4,2],
+            [0,19,6,8,2],
             [-1,25,4,2,2],
             [0,6,8,8,2],
         ],[
@@ -69,21 +57,34 @@ class Game is Node {
         ],[Vector2.new(100,50)],[Vector2.new(300, 50)],[300,180,"dying resets stats.\noops!"])
         _mapManager.addRoom([
             [0,0,0,27,15], // walls
-            [-1,1,1,25,13], // empty out space
+            [-1,1,1,25,12], // empty out space
             [-1,0,11,2,2], // lower left door
             [-1,4,0,2,2], // upper door
-            [0,19,6,4,2],
-            [0,6,8,8,2],
+            [0,19,8,4,2],
+            [0,11,6,4,2],
+            [0,3,4,4,2],
+            [-1,3,13,9,1],
+            [-1,16,13,8,1],
         ],[
-            null,[3, 20, 11*18],[1,26*18-20,11*18],null
+            null,[3, 20, 11*18],[1,26*18-20,4*18],null
         ],[
-            // Vector2.new(100,50)
+            Vector2.new(100,150),
+            Vector2.new(300,150)
         ],[
-            Vector2.new(100, 50),
-            Vector2.new(300, 50)
-        ],[300,200,"thwump!"])
+            Vector2.new(100-20, 25),
+            Vector2.new(370, 25)
+        ],[300,50,"thwump!"])
+        _mapManager.addRoom([
+            [0,0,0,27,15],
+            [-1,1,1,25,13],
+            [-1,4,13,2,2],
+            [0,8,13,8,1],
+        ],[
+            null, null, null, [2, 4*18, 2]
+        ],[],null,[200,100,"you made it!\nthanks for playing.\ncode by riley\nmusic by jason"])
+        
         // "sometimes youre\nunlucky.\njust keep trying!"
-        _mapManager.setRoom(2)
+        _mapManager.setRoom(0)
 
         // _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
         // _tileMap.addTemplate(234, 0, true)

@@ -35,6 +35,7 @@ class MapManager is Node {
         _textBox = TextBox.new(this, 200, 100, Vector2.new(800, 200), "")
 
         _music = AudioSource.new(this,"game_data/music/cute_track.mp3",true)
+        _winMusic = AudioSource.new(this,"game_data/music/victory_music.mp3",true)
         _music.looping = true
         _music.play()
     }
@@ -57,6 +58,10 @@ class MapManager is Node {
         setRoom(_checkpointRoom)
     }
     setRoom(idx){
+        if(idx == 3){
+            _music.stop()
+            _winMusic.play()
+        }
         for (enemy in _activeEnemies) {
             enemy.transform.position.x = -100
             enemy.update(0)
@@ -126,7 +131,7 @@ class MapManager is Node {
         if(door){
             setRoom(door[0])
             _player.transform.position.x = door[1]
-            // _player.transform.position.y = door[2]
+            _player.transform.position.y = door[2]
             _player.update(0)
             _checkpointRoom = door[0]
             _checkpointX = door[1]
