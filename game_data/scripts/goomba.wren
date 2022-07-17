@@ -6,11 +6,11 @@ class Goomba is Sprite {
         super(parent, 3 * 24, 2 * 24, 24, 24)
         _tileMap = tileMap
         _gravity = 10
-        _speed = 150
+        _speed = 120
         _dx = -1
         _vel = Vector3.new(0,0,0)
         _player = player
-        _radius = 10
+        _radius = 12
     }
 
     bounce(){

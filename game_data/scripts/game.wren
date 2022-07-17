@@ -45,7 +45,7 @@ class Game is Node {
         Renderer.blitFileToAtlas("game_data/sprites/kenny_mini_square_mono_12x9.png", 0, 88)
         _random = Random.new()
         _player = Player.new(null, _tileMap, _random)
-        _player.transform.position.x = 100
+        _player.transform.position.x = 50
         _player.transform.position.y = 100
 
         _mapManager = MapManager.new(this, _player)
@@ -56,7 +56,7 @@ class Game is Node {
             [0,8,13,8,1],
         ],[
             [1, 20, 11*18], null, null, null
-        ],[Vector2.new(200,50)],null,null)
+        ],[Vector2.new(200,50)],null,[200,100,"a and d to move.\nspace to jump."])
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],
@@ -66,11 +66,24 @@ class Game is Node {
             [0,6,8,8,2],
         ],[
             [2, 20, 11*18],null,[0,26*18-20,11*18],null
-        ],[Vector2.new(100,50)],null,true)
-        _mapManager.setRoom(0)
-        _music = AudioSource.new(this,"game_data/music/cute_track.mp3",true)
-        _music.looping = true
-        _music.play()
+        ],[Vector2.new(100,50)],[Vector2.new(300, 50)],[300,180,"dying resets stats.\noops!"])
+        _mapManager.addRoom([
+            [0,0,0,27,15], // walls
+            [-1,1,1,25,13], // empty out space
+            [-1,0,11,2,2], // lower left door
+            [-1,4,0,2,2], // upper door
+            [0,19,6,4,2],
+            [0,6,8,8,2],
+        ],[
+            null,[3, 20, 11*18],[1,26*18-20,11*18],null
+        ],[
+            // Vector2.new(100,50)
+        ],[
+            Vector2.new(100, 50),
+            Vector2.new(300, 50)
+        ],[300,200,"thwump!"])
+        // "sometimes youre\nunlucky.\njust keep trying!"
+        _mapManager.setRoom(2)
 
         // _tileMap = TileMap.new(this, 27, 15, 18, 18, 0, 234)
         // _tileMap.addTemplate(234, 0, true)

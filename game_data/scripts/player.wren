@@ -44,7 +44,7 @@ class Player is Node {
             die.transform.position.y = 25 + i * 30
             die.value = val
 
-            _textBox = TextBox.new(this, Vector2.new(0, 88 + 36 + i * 30), name)
+            _textBox = TextBox.new(this, 100, 50, Vector2.new(0, 88 + 36 + i * 30), name)
             _textBox.transform.position.x = 35
             _textBox.transform.position.y = die.transform.position.y - 5
             _dice.add(die)
@@ -59,6 +59,7 @@ class Player is Node {
         move.mulScalar(_speed * deltaTime)
         _vel.x = move.x
         _vel.y = _vel.y + _gravity * deltaTime
+        if(_vel.y > 100) _vel.y = 100
         if(Input.getButtonPressed("jump", 0)) {
             var jumping = false
             if(_onGround){

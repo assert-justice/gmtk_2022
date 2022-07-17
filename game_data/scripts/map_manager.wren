@@ -1,8 +1,11 @@
 import "tilemap" for TileMap
 import "node" for Node
-import "vmath" for Vector3
+import "vmath" for Vector2, Vector3
 import "pool" for Pool
 import "goomba" for Goomba
+import "slider" for Slider
+import "text_box" for TextBox
+import "audio_source" for AudioSource
 
 class MapManager is Node {
     //
@@ -17,7 +20,6 @@ class MapManager is Node {
         _player.tileMap = _tileMap
         _rooms = []
         _currentRoomIdx = 0
-        _nextRoomIdx = 0
         _currentRoom = null
         _state = 0 // 0: idle, 1: clearing, 2: building
         _animTime = 0.001
@@ -25,20 +27,25 @@ class MapManager is Node {
         _animX = 0
         _animY = 0
         _enemyPool = Pool.new(0){Goomba.new(this, _tileMap, player)}
+        _sliderPool = Pool.new(0){Slider.new(this, _tileMap, player)}
         _activeEnemies = []
         _checkpointRoom = 0
         _checkpointX = 100
         _checkpointY = 100
-        // System.print(_tileMap.onGrid(0, 15))
+        _textBox = TextBox.new(this, 200, 100, Vector2.new(800, 200), "")
+
+        _music = AudioSource.new(this,"game_data/music/cute_track.mp3",true)
+        _music.looping = true
+        _music.play()
     }
 
-    addRoom(steps, doors, enemies, checkpoints, boss){
+    addRoom(steps, doors, enemies, sliders, text){
         var room = {
             "steps":steps,
             "doors":doors,
             "enemies":enemies,
-            "checkpoints":checkpoints,
-            "boss":boss,
+            "sliders":sliders,
+            "text":text,
         }
         _rooms.add(room)
         return _rooms.count - 1
@@ -46,6 +53,7 @@ class MapManager is Node {
     hit(){
         _player.transform.position.x = _checkpointX
         _player.transform.position.y = _checkpointY
+        _player.update(0)
         setRoom(_checkpointRoom)
     }
     setRoom(idx){
@@ -76,6 +84,23 @@ class MapManager is Node {
                 enemy.transform.position.y = position.y
                 enemy.update(0)
             }
+        }
+        if(_currentRoom["sliders"]){
+            for(position in _currentRoom["sliders"]){
+                // System.print("%(position.x) %(position.y)")
+                var enemy = _sliderPool.get(this)
+                _activeEnemies.add(enemy)
+                enemy.transform.position.x = position.x
+                enemy.transform.position.y = position.y
+                enemy.update(0)
+            }
+        }
+        _textBox.clear()
+        if(_currentRoom["text"]){
+            var data = _currentRoom["text"]
+            _textBox.transform.position.x = data[0]
+            _textBox.transform.position.y = data[1]
+            _textBox.setText(data[2])
         }
     }
     lerp(a,b,t){

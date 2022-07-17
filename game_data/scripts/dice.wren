@@ -42,7 +42,7 @@ class Dice is Sprite {
     }
     roll(){
         _rolling = true
-        _angleSpeed = _random.float()  + 3
+        _angleSpeed = _random.float() * 2 + 4
     }
     rolling{_rolling}
 }
