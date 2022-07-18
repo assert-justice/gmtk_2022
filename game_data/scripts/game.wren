@@ -33,13 +33,15 @@ class Game is Node {
         Renderer.blitFileToAtlas("game_data/sprites/kenny_mini_square_mono_12x9.png", 0, 88)
         _random = Random.new()
         _player = Player.new(null, _tileMap, _random)
-        _player.transform.position.x = 50
-        _player.transform.position.y = 100
+        _player.transform.position.x = 4*18
+        _player.transform.position.y = 2
 
         _mapManager = MapManager.new(this, _player)
         _mapManager.addRoom([
             [0,0,0,27,15],
             [-1,1,1,25,13],
+            // [0,3,0,4,2],
+            [-1,4,0,2,2],
             [-1,25,11,2,2],
             [0,8,13,8,1],
         ],[
@@ -80,7 +82,7 @@ class Game is Node {
             [-1,4,13,2,2],
             [0,8,13,8,1],
         ],[
-            null, null, null, [2, 4*18, 2]
+            null, null, null, [0, 4*18, 2]
         ],[],null,[200,100,"you made it!\nthanks for playing.\ncode by riley\nmusic by jason"])
         
         // "sometimes youre\nunlucky.\njust keep trying!"
